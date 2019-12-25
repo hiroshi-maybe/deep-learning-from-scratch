@@ -47,11 +47,11 @@ class TwoLayerNet:
 
     return grads
 
-net = TwoLayerNet(input_size=784, hidden_size=100, output_size=10)
-
-print(f"W1: {net.params['W1'].shape}, b1: {net.params['b1'].shape}, W2: {net.params['W2'].shape}, b2: {net.params['b2'].shape}")
-
-x = np.random.randn(123, 784)
-t = np.random.randn(123, 10)
-print(x.shape)
-grads = net.numerical_gradient(x, t)
+def show():
+  net = TwoLayerNet(input_size=784, hidden_size=100, output_size=10)
+  print(f"W1: {net.params['W1'].shape}, b1: {net.params['b1'].shape}, W2: {net.params['W2'].shape}, b2: {net.params['b2'].shape}")
+  x = np.random.randn(123, 784)
+  t = np.random.randn(123, 10)
+  print(x.shape)
+  grads = net.numerical_gradient(x, t)
+  print(grads)
