@@ -29,6 +29,23 @@ class AddLayer:
     dx = dy = dout * 1
     return dx, dy
 
+def Relu:
+  def __init__(self):
+    self.mask = None
+    
+  def forward(self, x):
+    self.mask = x<=0
+    out = x.copy()
+    out[self.mask] = 0
+    
+    return out
+  
+  def backward(self, dout):
+    dout[self.mask] = 0
+    dx = dout
+    
+    return dx
+
 def nearlyEqual(x, y):
   EPS=1e-5
   return abs(x-y) < EPS
