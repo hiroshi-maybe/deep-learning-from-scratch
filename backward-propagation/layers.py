@@ -29,7 +29,7 @@ class AddLayer:
     dx = dy = dout * 1
     return dx, dy
 
-def Relu:
+class Relu:
   def __init__(self):
     self.mask = None
     
@@ -46,7 +46,7 @@ def Relu:
     
     return dx
 
-def Sigmoid:
+class Sigmoid:
   def __init__(self):
     self.out = None
   
@@ -56,6 +56,30 @@ def Sigmoid:
   
   def backward(self, dout):
     dx = dout * (1.0 - self.out) * self.out
+    return dx
+
+# https://mathtrain.jp/rensaritsu
+# http://w3e.kanazawa-it.ac.jp/math/category/bibun/henbibun/henkan-tex.cgi?target=/math/category/bibun/henbibun/gouseikansuu-no-henbibun_doushutu1.html
+# https://qiita.com/sand/items/2d783a12c575fb949c6e
+class Affine:
+  def __init__(self, W, b):
+    self.W = W, self.b = b
+    self.x = self.dW = self.db = None
+    
+  def forward(self, x):
+    self.x = x
+    out = np.dot(x, self.W) + b
+    
+    return out
+    
+  def backward(self, dout):
+    # ∂L/∂X = ∂L/∂Y*W^T
+    dx = np.dot(dout, self.W.T)
+    # ∂L/∂W = X^T*∂L/∂Y
+    dw = np.dot(self.X.T, dout)
+    # ∂L/∂B = ∑ { ∂L/∂Y_{i,j} : i }
+    db = np.sum(dout, axis=0)
+    
     return dx
 
 def nearlyEqual(x, y):
