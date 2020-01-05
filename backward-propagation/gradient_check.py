@@ -18,7 +18,9 @@ for key in grad_numerical.keys():
   diff = np.average(np.abs(grad_backprop[key]-grad_numerical[key]))
   print(key + ":" + str(diff))
 
-# W1:9.881283367004308e-05
-# b1:0.000763729348068472
-# W2:0.0025654118766454837
-# b2:0.06666666678590462
+""" diffs
+W1:3.5776652686949997e-10
+b1:2.092727339347584e-09
+W2:5.848868498313783e-09
+b2:1.3991455652812012e-07
+"""
