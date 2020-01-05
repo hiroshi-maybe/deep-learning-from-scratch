@@ -4,6 +4,9 @@ import numpy as np
 def sigmoid(x):
   return 1 / (1 + np.exp(-x))
 
+def sigmoid_grad(x):
+  return (1.0 - sigmoid(x)) * sigmoid(x)
+
 def softmax(a):
   exp_a = np.exp(a)
   sum_exp_a = np.sum(exp_a)

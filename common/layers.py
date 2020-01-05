@@ -67,12 +67,15 @@ class Sigmoid:
 # https://qiita.com/sand/items/2d783a12c575fb949c6e
 class Affine:
   def __init__(self, W, b):
-    self.W = W, self.b = b
-    self.x = self.dW = self.db = None
+    self.W = W
+    self.b = b
+    self.x = self.original_x_shape = self.dW = self.db = None
     
   def forward(self, x):
+    self.original_x_shape = x.shape
+    x = x.reshape(x.shape[0], -1)
     self.x = x
-    out = np.dot(x, self.W) + b
+    out = np.dot(x, self.W) + self.b
     
     return out
     
@@ -80,10 +83,11 @@ class Affine:
     # ∂L/∂X = ∂L/∂Y*W^T
     dx = np.dot(dout, self.W.T)
     # ∂L/∂W = X^T*∂L/∂Y
-    dw = np.dot(self.X.T, dout)
+    self.dW = np.dot(self.x.T, dout)
     # ∂L/∂B = ∑ { ∂L/∂Y_{i,j} : i }
-    db = np.sum(dout, axis=0)
+    self.db = np.sum(dout, axis=0)
     
+    dx = dx.reshape(*self.original_x_shape)
     return dx
 
 class SoftmaxWithLoss:

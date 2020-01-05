@@ -46,6 +46,31 @@ class TwoLayerNet:
     grads['b2'] = numerical_gradient(loss_W, self.params['b2'])
 
     return grads
+    
+  def gradient(self, x, t):
+    W1, W2 = self.params['W1'], self.params['W2']
+    b1, b2 = self.params['b1'], self.params['b2']
+    grads = {}
+      
+    batch_num = x.shape[0]
+      
+    # forward
+    a1 = np.dot(x, W1) + b1
+    z1 = sigmoid(a1)
+    a2 = np.dot(z1, W2) + b2
+    y = softmax(a2)
+      
+    # backward
+    dy = (y - t) / batch_num
+    grads['W2'] = np.dot(z1.T, dy)
+    grads['b2'] = np.sum(dy, axis=0)
+      
+    dz1 = np.dot(dy, W2.T)
+    da1 = sigmoid_grad(a1) * dz1
+    grads['W1'] = np.dot(x.T, da1)
+    grads['b1'] = np.sum(da1, axis=0)
+
+    return grads
 
 def show():
   net = TwoLayerNet(input_size=784, hidden_size=100, output_size=10)
