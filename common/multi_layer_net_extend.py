@@ -50,8 +50,8 @@ class MultiLayerNetExtend:
         self.layers['Activation_function' + str(idx)] = activation_layer[activation]()
         
       # Layer for Dropout
-#      if self.use_dropout:
-#          self.layers['Dropout' + str(idx)] = Dropout(dropout_ration)
+      if self.use_dropout:
+          self.layers['Dropout' + str(idx)] = Dropout(dropout_ration)
 
     idx = self.hidden_layer_num + 1
     self.layers['Affine' + str(idx)] = Affine(self.params['W' + str(idx)], self.params['b' + str(idx)])
@@ -78,14 +78,17 @@ class MultiLayerNetExtend:
       self.params['W'+str(idx)] = scale*np.random.randn(all_size_list[idx-1], all_size_list[idx])
       self.params['b'+str(idx)] = np.zeros(all_size_list[idx])
 
-  def predict(self, x):
-    for layer in self.layers.values():
-      x = layer.forward(x)
+  def predict(self, x, train_flg=False):
+    for key, layer in self.layers.items():
+      if "Dropout" in key or "BatchNorm" in key:
+        x = layer.forward(x, train_flg)
+      else:
+        x = layer.forward(x)
     
     return x
   
-  def loss(self, x, t):
-    y = self.predict(x)
+  def loss(self, x, t, train_flg=False):
+    y = self.predict(x, train_flg)
     
     weight_decay = 0
     for idx in range(1, self.hidden_layer_num + 2):
@@ -95,7 +98,7 @@ class MultiLayerNetExtend:
     return self.last_layer.forward(y,t) + weight_decay
   
   def accuracy(self, x, t):
-    y = self.predict(x)
+    y = self.predict(x, train_flg=False)
     y = np.argmax(y, axis=1)
     if t.ndim != 1 : t=np.argmax(t, axis=1)
     
@@ -104,7 +107,7 @@ class MultiLayerNetExtend:
 
   def gradient(self, x, t):
     # forward
-    self.loss(x, t)
+    self.loss(x, t, train_flg=True)
 
     # backward
     dout = 1
