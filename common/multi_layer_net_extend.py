@@ -47,7 +47,7 @@ class MultiLayerNetExtend:
         self.params['beta' + str(idx)] = np.zeros(hidden_size_list[idx-1])
         self.layers['BatchNorm' + str(idx)] = BatchNormalization(self.params['gamma' + str(idx)], self.params['beta' + str(idx)])
             
-        self.layers['Activation_function' + str(idx)] = activation_layer[activation]()
+      self.layers['Activation_function' + str(idx)] = activation_layer[activation]()
         
       # Layer for Dropout
       if self.use_dropout:
