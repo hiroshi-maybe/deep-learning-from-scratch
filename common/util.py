@@ -38,7 +38,7 @@ def im2col(input_data, filter_h, filter_w, stride=1, pad=0):
 
   Returns
   -------
-  res : 2d array
+  res : 2d array [batch size*out_h*out_w, C*filter_h*filter_w]
   """
   N,C,H,W = input_data.shape
   out_h = (H+2*pad-filter_h)//stride+1
@@ -56,7 +56,7 @@ def im2col(input_data, filter_h, filter_w, stride=1, pad=0):
   res = res.transpose(0,4,5,1,2,3).reshape(N*out_w*out_w, -1)
   return res
 
-def col2im(col, input_syape, filter_h, filter_w, stride=1, pad=0):
+def col2im(col, input_shape, filter_h, filter_w, stride=1, pad=0):
   """Reshape to 4d matrix to backward in convolutional NN
 
   Parameters
@@ -78,7 +78,7 @@ def col2im(col, input_syape, filter_h, filter_w, stride=1, pad=0):
   out_w = (W+2*pad-filter_w)//stride+1
   col = col.reshape(N, out_h, out_w, C, filter_h, filter_w).transpose(0,3,4,5,1,2)
 
-  img = np.zeros((N,C,H+2*pad_stride-1, W+2*pad+stride-1))
+  img = np.zeros((N,C,H+2*pad+stride-1, W+2*pad+stride-1))
   for y in range(filter_h):
     y_max = y+stride*out_h
     for x in range(filter_w):
